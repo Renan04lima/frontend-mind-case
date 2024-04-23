@@ -38,7 +38,7 @@ export const ProductApi = {
       },
     });
   },
-  getProducts: (): Promise<ProductData[]> => requests.get("products"),
+  getProducts: (): Promise<ProductModel[]> => requests.get("products"),
   updateProduct: (product: UpdateProduct, id: number): Promise<ProductData> =>
     requests.put(`products/${id}`, product),
   deleteProduct: (id: number): Promise<void> =>

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Table,
   Thead,
@@ -21,33 +21,14 @@ import { NewProductData, ProductModel } from "../models/product";
 import { ProductApi } from "../services/api";
 
 const Products = () => {
-  const [products, setProducts] = useState<ProductModel[]>([
-    {
-      id: 1,
-      name: "Product 1",
-      description: "",
-      price: 10,
-      quantityStock: 10,
-      image: undefined,
-    },
-    {
-      id: 2,
-      name: "Product 2",
-      description: "",
-      price: 20,
-      quantityStock: 10,
-      image: undefined,
-    },
-    {
-      id: 3,
-      name: "Product 3",
-      description: "",
-      price: 30,
-      quantityStock: 10,
-      image: undefined,
-    },
-  ]);
+  const [products, setProducts] = useState<ProductModel[]>([]);
   const { isOpen, onOpen, onClose } = useDisclosure();
+
+  useEffect(() => {
+    ProductApi.getProducts().then((data) => {
+      setProducts(data);
+    });
+  }, []);
 
   const handleSubmit = async (newProduct: NewProductData) => {
     ProductApi.createProduct(newProduct)
