@@ -25,18 +25,11 @@ import {
   Flex,
 } from "@chakra-ui/react";
 import { FaEdit, FaTrash, FaPlus } from "react-icons/fa";
-
-type Product = {
-  id: number;
-  name: string;
-  description: string;
-  price: number;
-  quantityStock: number;
-  image?: File;
-};
+import { ProductData } from "../models/product";
+import { ProductApi } from "../services/api";
 
 const Products = () => {
-  const [products, setProducts] = useState<Product[]>([
+  const [products, setProducts] = useState<ProductData[]>([
     {
       id: 1,
       name: "Product 1",
@@ -65,7 +58,7 @@ const Products = () => {
 
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const [newProduct, setNewProduct] = useState<Omit<Product, "id">>({
+  const [newProduct, setNewProduct] = useState<Omit<ProductData, "id">>({
     name: "",
     description: "",
     price: 0,
@@ -81,18 +74,23 @@ const Products = () => {
     });
   };
 
-  const handleAddProduct = () => {
-    setProducts([
-      ...products,
-      {
-        id: products.length + 1,
-        name: newProduct.name,
-        description: newProduct.description,
-        price: newProduct.price,
-        quantityStock: newProduct.quantityStock,
-        image: newProduct.image,
-      },
-    ]);
+  const handleSubmit = () => {
+    ProductApi.createPost(newProduct)
+      .then((data) => {
+        setProducts([...products, data]);
+        setNewProduct({
+          name: "",
+          description: "",
+          price: 0,
+          quantityStock: 0,
+          image: undefined,
+        });
+        onClose();
+      })
+      .then((err) => {
+        console.log(err);
+      });
+
     onClose();
   };
 
@@ -232,7 +230,7 @@ const Products = () => {
               />
             </FormControl>
           </ModalBody>
-          <Button mt={4} colorScheme="teal" onClick={handleAddProduct}>
+          <Button mt={4} colorScheme="teal" onClick={handleSubmit}>
             Salvar
           </Button>
         </ModalContent>
