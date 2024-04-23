@@ -24,22 +24,23 @@ const requests = {
 };
 
 export const ProductApi = {
-  createPost: (post: CreateProduct): Promise<ProductModel> => {
+  createProduct: (product: CreateProduct): Promise<ProductModel> => {
     const formData = new FormData();
-    formData.append("name", post.name);
-    formData.append("description", post.description);
-    formData.append("price", post.price.toString());
-    formData.append("quantityStock", post.quantityStock.toString());
+    formData.append("name", product.name);
+    formData.append("description", product.description);
+    formData.append("price", product.price.toString());
+    formData.append("quantityStock", product.quantityStock.toString());
 
-    if (post.image) formData.append("file", post.image);
+    if (product.image) formData.append("file", product.image);
     return requests.post("products", formData, {
       headers: {
         "Content-Type": "multipart/form-data",
       },
     });
   },
-  getPosts: (): Promise<ProductData[]> => requests.get("products"),
-  updatePost: (post: UpdateProduct, id: number): Promise<ProductData> =>
-    requests.put(`products/${id}`, post),
-  deletePost: (id: number): Promise<void> => requests.delete(`products/${id}`),
+  getProducts: (): Promise<ProductData[]> => requests.get("products"),
+  updateProduct: (product: UpdateProduct, id: number): Promise<ProductData> =>
+    requests.put(`products/${id}`, product),
+  deleteProduct: (id: number): Promise<void> =>
+    requests.delete(`products/${id}`),
 };

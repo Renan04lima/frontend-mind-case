@@ -74,7 +74,7 @@ const Products = () => {
   };
 
   const handleSubmit = async () => {
-    ProductApi.createPost(newProduct)
+    ProductApi.createProduct(newProduct)
       .then((data) => {
         let base64String;
         if (data?.image)
