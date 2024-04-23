@@ -1,5 +1,5 @@
 import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
-import { ProductData } from "../models/product";
+import { NewProductData, ProductData, ProductModel } from "../models/product";
 
 const instance = axios.create({
   baseURL: "http://localhost:3333/api/",
@@ -8,7 +8,7 @@ const instance = axios.create({
 
 const responseBody = (response: AxiosResponse) => response.data;
 
-type CreateProduct = Omit<ProductData, "id">;
+type CreateProduct = NewProductData;
 type UpdateProduct = Partial<Omit<ProductData, "id">>;
 
 const requests = {
@@ -24,7 +24,7 @@ const requests = {
 };
 
 export const ProductApi = {
-  createPost: (post: CreateProduct): Promise<ProductData> => {
+  createPost: (post: CreateProduct): Promise<ProductModel> => {
     const formData = new FormData();
     formData.append("name", post.name);
     formData.append("description", post.description);

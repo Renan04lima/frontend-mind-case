@@ -25,11 +25,11 @@ import {
   Flex,
 } from "@chakra-ui/react";
 import { FaEdit, FaTrash, FaPlus } from "react-icons/fa";
-import { ProductData } from "../models/product";
+import { NewProductData, ProductModel } from "../models/product";
 import { ProductApi } from "../services/api";
 
 const Products = () => {
-  const [products, setProducts] = useState<ProductData[]>([
+  const [products, setProducts] = useState<ProductModel[]>([
     {
       id: 1,
       name: "Product 1",
@@ -55,10 +55,9 @@ const Products = () => {
       image: undefined,
     },
   ]);
-
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const [newProduct, setNewProduct] = useState<Omit<ProductData, "id">>({
+  const [newProduct, setNewProduct] = useState<NewProductData>({
     name: "",
     description: "",
     price: 0,
@@ -74,10 +73,34 @@ const Products = () => {
     });
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     ProductApi.createPost(newProduct)
       .then((data) => {
-        setProducts([...products, data]);
+        let base64String;
+        if (data?.image)
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-expect-error
+          base64String = Buffer.from(data.image.buffer, "binary").toString(
+            "base64"
+          );
+
+        setProducts([
+          ...products,
+          {
+            id: data.id,
+            name: data.name,
+            description: data.description,
+            price: data.price,
+            quantityStock: data.quantityStock,
+            image: data?.image
+              ? {
+                  buffer: base64String as unknown as Buffer,
+                  mimetype: data?.image?.mimetype,
+                }
+              : undefined,
+          },
+        ]);
+
         setNewProduct({
           name: "",
           description: "",
@@ -129,7 +152,7 @@ const Products = () => {
                   boxSize={{ base: "40px", lg: "56px" }}
                   src={
                     product?.image
-                      ? URL.createObjectURL(product.image)
+                      ? `data:${product.image.mimetype};base64,${product.image.buffer}`
                       : "src/assets/placeholder.png"
                   }
                   alt="imagem produto"
