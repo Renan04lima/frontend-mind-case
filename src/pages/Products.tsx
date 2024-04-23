@@ -10,21 +10,13 @@ import {
   IconButton,
   Icon,
   useDisclosure,
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalBody,
-  ModalCloseButton,
-  FormControl,
-  FormLabel,
-  Input,
   Container,
   Heading,
   Image,
   Flex,
 } from "@chakra-ui/react";
 import { FaEdit, FaTrash, FaPlus } from "react-icons/fa";
+import NewProductModal from "../components/NewProductModal";
 import { NewProductData, ProductModel } from "../models/product";
 import { ProductApi } from "../services/api";
 
@@ -57,23 +49,7 @@ const Products = () => {
   ]);
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const [newProduct, setNewProduct] = useState<NewProductData>({
-    name: "",
-    description: "",
-    price: 0,
-    quantityStock: 0,
-    image: undefined,
-  });
-
-  const handleInputChange = (e: React.FormEvent<HTMLInputElement>) => {
-    const { name, value } = e.target as any;
-    setNewProduct({
-      ...newProduct,
-      [name]: value,
-    });
-  };
-
-  const handleSubmit = async () => {
+  const handleSubmit = async (newProduct: NewProductData) => {
     ProductApi.createProduct(newProduct)
       .then((data) => {
         let base64String;
@@ -100,21 +76,10 @@ const Products = () => {
               : undefined,
           },
         ]);
-
-        setNewProduct({
-          name: "",
-          description: "",
-          price: 0,
-          quantityStock: 0,
-          image: undefined,
-        });
-        onClose();
       })
       .then((err) => {
         console.log(err);
       });
-
-    onClose();
   };
 
   return (
@@ -166,6 +131,9 @@ const Products = () => {
                   colorScheme="blue"
                   aria-label="Edit"
                   mr={2}
+                  onClick={() => {
+                    onOpen;
+                  }}
                 />
                 <IconButton
                   icon={<FaTrash />}
@@ -178,86 +146,11 @@ const Products = () => {
         </Tbody>
       </Table>
 
-      <Modal isOpen={isOpen} onClose={onClose}>
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>Novo Produto</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>
-            <FormControl mb={4}>
-              <FormLabel>Image</FormLabel>
-              <label
-                htmlFor="image-upload"
-                style={{ display: "block", cursor: "pointer" }}
-              >
-                <Button as="span">Upload Image</Button>
-              </label>
-              <Input
-                id="image-upload"
-                type="file"
-                name="image"
-                accept="image/*"
-                onChange={(e) => {
-                  const file = e.target.files?.[0];
-                  setNewProduct({
-                    ...newProduct,
-                    image: file,
-                  });
-                }}
-                style={{ display: "none" }}
-              />
-              {newProduct.image && (
-                <Image
-                  src={URL.createObjectURL(newProduct.image)}
-                  alt="Product"
-                  mt={2}
-                  boxSize="150px"
-                  objectFit="cover"
-                />
-              )}
-            </FormControl>
-            <FormControl mb={4}>
-              <FormLabel>Nome</FormLabel>
-              <Input
-                type="text"
-                name="name"
-                value={newProduct.name}
-                onChange={handleInputChange}
-              />
-            </FormControl>
-            <FormControl mb={4}>
-              <FormLabel>Descrição</FormLabel>
-              <Input
-                type="text"
-                name="description"
-                value={newProduct.description}
-                onChange={handleInputChange}
-              />
-            </FormControl>
-            <FormControl>
-              <FormLabel>Preço</FormLabel>
-              <Input
-                type="number"
-                name="price"
-                value={newProduct.price}
-                onChange={handleInputChange}
-              />
-            </FormControl>
-            <FormControl>
-              <FormLabel>Quantidade em estoque</FormLabel>
-              <Input
-                type="number"
-                name="quantityStock"
-                value={newProduct.quantityStock}
-                onChange={handleInputChange}
-              />
-            </FormControl>
-          </ModalBody>
-          <Button mt={4} colorScheme="teal" onClick={handleSubmit}>
-            Salvar
-          </Button>
-        </ModalContent>
-      </Modal>
+      <NewProductModal
+        isOpen={isOpen}
+        onClose={onClose}
+        onSubmit={handleSubmit}
+      />
     </Container>
   );
 };
