@@ -17,12 +17,23 @@ import {
 } from "@chakra-ui/react";
 import { FaEdit, FaTrash, FaPlus } from "react-icons/fa";
 import NewProductModal from "../components/NewProductModal";
-import { NewProductData, ProductModel } from "../models/product";
+import {
+  EditProductData,
+  NewProductData,
+  ProductModel,
+} from "../models/product";
 import { ProductApi } from "../services/api";
+import EditProductModal from "../components/EditProductModal";
 
 const Products = () => {
   const [products, setProducts] = useState<ProductModel[]>([]);
+  const [productSelected, setProductSelected] = useState<ProductModel | null>();
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const {
+    isOpen: isOpenEdit,
+    onOpen: onOpenEdit,
+    onClose: onCloseEdit,
+  } = useDisclosure();
 
   useEffect(() => {
     ProductApi.getProducts().then((data) => {
@@ -30,7 +41,7 @@ const Products = () => {
     });
   }, []);
 
-  const handleSubmit = async (newProduct: NewProductData) => {
+  const handleSubmitNewProduct = async (newProduct: NewProductData) => {
     ProductApi.createProduct(newProduct)
       .then((data) => {
         let base64String;
@@ -40,6 +51,45 @@ const Products = () => {
           base64String = Buffer.from(data.image.buffer, "binary").toString(
             "base64"
           );
+
+        setProducts([
+          ...products,
+          {
+            id: data.id,
+            name: data.name,
+            description: data.description,
+            price: data.price,
+            quantityStock: data.quantityStock,
+            image: data?.image
+              ? {
+                  buffer: base64String as unknown as Buffer,
+                  mimetype: data?.image?.mimetype,
+                }
+              : undefined,
+          },
+        ]);
+      })
+      .then((err) => {
+        console.log(err);
+      });
+  };
+
+  const handleSubmitEditProduct = async (
+    editProduct: EditProductData,
+    id: number
+  ) => {
+    ProductApi.updateProduct(editProduct, id)
+      .then((data) => {
+        let base64String;
+        if (data?.image) {
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-expect-error
+          base64String = Buffer.from(data.image.buffer, "binary").toString(
+            "base64"
+          );
+        }
+
+        setProducts(products.filter((product) => product.id !== id));
 
         setProducts([
           ...products,
@@ -113,7 +163,8 @@ const Products = () => {
                   aria-label="Edit"
                   mr={2}
                   onClick={() => {
-                    onOpen;
+                    setProductSelected(product);
+                    onOpenEdit();
                   }}
                 />
                 <IconButton
@@ -130,8 +181,16 @@ const Products = () => {
       <NewProductModal
         isOpen={isOpen}
         onClose={onClose}
-        onSubmit={handleSubmit}
+        onSubmit={handleSubmitNewProduct}
       />
+      {productSelected && (
+        <EditProductModal
+          isOpen={isOpenEdit}
+          onClose={onCloseEdit}
+          onSubmit={handleSubmitEditProduct}
+          productSelected={productSelected}
+        />
+      )}
     </Container>
   );
 };

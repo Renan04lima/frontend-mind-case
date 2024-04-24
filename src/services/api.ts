@@ -1,5 +1,9 @@
 import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
-import { NewProductData, ProductData, ProductModel } from "../models/product";
+import {
+  NewProductData,
+  ProductModel,
+  EditProductData,
+} from "../models/product";
 
 const instance = axios.create({
   baseURL: "http://localhost:3333/api/",
@@ -8,9 +12,6 @@ const instance = axios.create({
 
 const responseBody = (response: AxiosResponse) => response.data;
 
-type CreateProduct = NewProductData;
-type UpdateProduct = Partial<Omit<ProductData, "id">>;
-
 const requests = {
   post: (
     url: string,
@@ -18,13 +19,13 @@ const requests = {
     options: AxiosRequestConfig<any>
   ) => instance.post(url, formDataBody, options).then(responseBody),
   get: (url: string) => instance.get(url).then(responseBody),
-  put: (url: string, body: UpdateProduct) =>
+  put: (url: string, body: EditProductData) =>
     instance.put(url, body).then(responseBody),
   delete: (url: string) => instance.delete(url).then(responseBody),
 };
 
 export const ProductApi = {
-  createProduct: (product: CreateProduct): Promise<ProductModel> => {
+  createProduct: (product: NewProductData): Promise<ProductModel> => {
     const formData = new FormData();
     formData.append("name", product.name);
     formData.append("description", product.description);
@@ -39,8 +40,10 @@ export const ProductApi = {
     });
   },
   getProducts: (): Promise<ProductModel[]> => requests.get("products"),
-  updateProduct: (product: UpdateProduct, id: number): Promise<ProductData> =>
-    requests.put(`products/${id}`, product),
+  updateProduct: (
+    product: EditProductData,
+    id: number
+  ): Promise<ProductModel> => requests.put(`products/${id}`, product),
   deleteProduct: (id: number): Promise<void> =>
     requests.delete(`products/${id}`),
 };

@@ -27,3 +27,5 @@ export type NewProductData = {
   quantityStock: number;
   image?: File;
 };
+
+export type EditProductData = Partial<NewProductData>;
