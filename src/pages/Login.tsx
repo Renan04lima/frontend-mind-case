@@ -11,7 +11,6 @@ import {
 } from "@chakra-ui/react";
 import { useAuth } from "../hooks/useAuth";
 import { Link, useNavigate } from "react-router-dom";
-import { AxiosError } from "axios";
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState("");

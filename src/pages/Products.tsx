@@ -10,11 +10,12 @@ import {
   IconButton,
   Icon,
   useDisclosure,
-  Container,
+  Box,
   Heading,
   Image,
   Flex,
   useToast,
+  Container,
 } from "@chakra-ui/react";
 import { FaEdit, FaTrash, FaPlus } from "react-icons/fa";
 import NewProductModal from "../components/NewProductModal";
@@ -25,6 +26,7 @@ import {
 } from "../models/product";
 import { ProductApi } from "../services/api";
 import EditProductModal from "../components/EditProductModal";
+import NavBar from "../components/NavBar";
 
 const Products = () => {
   const [products, setProducts] = useState<ProductModel[]>([]);
@@ -162,70 +164,72 @@ const Products = () => {
   };
 
   return (
-    <Container>
-      <Flex justify={"space-between"} mb={"30px"} alignItems={"center"}>
-        <Heading>Produtos</Heading>
-        <Button
-          leftIcon={<Icon as={FaPlus} />}
-          colorScheme="teal"
-          onClick={onOpen}
-          size={"sm"}
-        >
-          Novo produto
-        </Button>
-      </Flex>
-
-      <Table variant="simple">
-        <Thead>
-          <Tr>
-            <Th>Image</Th>
-            <Th>Nome</Th>
-            <Th>Preço</Th>
-            <Th>Ação</Th>
-          </Tr>
-        </Thead>
-        <Tbody>
-          {products.map((product) => (
-            <Tr key={product.id}>
-              <Td>
-                <Image
-                  borderRadius="full"
-                  borderColor={"gray"}
-                  borderWidth={"medium"}
-                  border={"5px"}
-                  boxSize={{ base: "40px", lg: "56px" }}
-                  src={
-                    product?.image
-                      ? `data:${product.image.mimetype};base64,${product.image.buffer}`
-                      : "src/assets/placeholder.png"
-                  }
-                  alt="imagem produto"
-                />
-              </Td>
-              <Td>{product.name}</Td>
-              <Td>R$ {product.price}</Td>
-              <Td>
-                <IconButton
-                  icon={<FaEdit />}
-                  colorScheme="blue"
-                  aria-label="Edit"
-                  mr={2}
-                  onClick={() => {
-                    setProductSelected(product);
-                    onOpenEdit();
-                  }}
-                />
-                <IconButton
-                  icon={<FaTrash />}
-                  colorScheme="red"
-                  aria-label="Delete"
-                  onClick={() => handleDeleteProduct(product.id)}
-                />
-              </Td>
+    <Box width="full" height="100vh">
+      <NavBar  />
+      <Container>
+        <Flex justify={"space-between"} mb={"30px"} alignItems={"center"}>
+          <Heading>Produtos</Heading>
+          <Button
+            leftIcon={<Icon as={FaPlus} />}
+            colorScheme="teal"
+            onClick={onOpen}
+            size={"sm"}
+          >
+            Novo produto
+          </Button>
+        </Flex>
+        <Table variant="simple">
+          <Thead>
+            <Tr>
+              <Th>Image</Th>
+              <Th>Nome</Th>
+              <Th>Preço</Th>
+              <Th>Ação</Th>
             </Tr>
-          ))}
-        </Tbody>
-      </Table>
+          </Thead>
+          <Tbody>
+            {products.map((product) => (
+              <Tr key={product.id}>
+                <Td>
+                  <Image
+                    borderRadius="full"
+                    borderColor={"gray"}
+                    borderWidth={"medium"}
+                    border={"5px"}
+                    boxSize={{ base: "40px", lg: "56px" }}
+                    src={
+                      product?.image
+                        ? `data:${product.image.mimetype};base64,${product.image.buffer}`
+                        : "src/assets/placeholder.png"
+                    }
+                    alt="imagem produto"
+                  />
+                </Td>
+                <Td>{product.name}</Td>
+                <Td>R$ {product.price}</Td>
+                <Td>
+                  <IconButton
+                    icon={<FaEdit />}
+                    colorScheme="blue"
+                    aria-label="Edit"
+                    mr={2}
+                    onClick={() => {
+                      setProductSelected(product);
+                      onOpenEdit();
+                    }}
+                  />
+                  <IconButton
+                    icon={<FaTrash />}
+                    colorScheme="red"
+                    aria-label="Delete"
+                    onClick={() => handleDeleteProduct(product.id)}
+                  />
+                </Td>
+              </Tr>
+            ))}
+          </Tbody>
+        </Table>
+      </Container>
 
       <NewProductModal
         isOpen={isOpen}
@@ -240,7 +244,7 @@ const Products = () => {
           productSelected={productSelected}
         />
       )}
-    </Container>
+    </Box>
   );
 };
 

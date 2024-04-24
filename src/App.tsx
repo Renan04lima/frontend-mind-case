@@ -13,7 +13,7 @@ function App() {
           <Route element={<PrivateRoutes />}>
             <Route index element={<Products />} path="/products" />
           </Route>
-          <Route element={<Login />} path="/login" />
+          <Route index element={<Login />} path="/" />
           <Route element={<SignUp />} path="/sign-up" />
         </Routes>
       </Router>
