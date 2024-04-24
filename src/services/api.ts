@@ -5,7 +5,7 @@ import {
   EditProductData,
 } from "../models/product";
 
-const instance = axios.create({
+export const api = axios.create({
   baseURL: "http://localhost:3333/api/",
   timeout: 15000,
 });
@@ -15,13 +15,13 @@ const responseBody = (response: AxiosResponse) => response.data;
 const requests = {
   post: (
     url: string,
-    formDataBody: FormData,
-    options: AxiosRequestConfig<any>
-  ) => instance.post(url, formDataBody, options).then(responseBody),
-  get: (url: string) => instance.get(url).then(responseBody),
+    body: FormData | object,
+    options?: AxiosRequestConfig<any>
+  ) => api.post(url, body, options).then(responseBody),
+  get: (url: string) => api.get(url).then(responseBody),
   put: (url: string, body: EditProductData) =>
-    instance.put(url, body).then(responseBody),
-  delete: (url: string) => instance.delete(url).then(responseBody),
+    api.put(url, body).then(responseBody),
+  delete: (url: string) => api.delete(url).then(responseBody),
 };
 
 export const ProductApi = {

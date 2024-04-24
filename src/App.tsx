@@ -1,22 +1,22 @@
-import {
-  createBrowserRouter,
-  createRoutesFromElements,
-  Route,
-  RouterProvider,
-} from "react-router-dom";
-
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Products from "./pages/Products";
-
-const router = createBrowserRouter(
-  createRoutesFromElements(
-    <Route path="/">
-      <Route index element={<Products />} />
-    </Route>
-  )
-);
+import Login from "./pages/Login";
+import PrivateRoutes from "./utils/PrivateRoutes";
+import { AuthProvider } from "./hooks/useAuth";
 
 function App() {
-  return <RouterProvider router={router} />;
+  return (
+    <AuthProvider>
+      <Router>
+        <Routes>
+          <Route element={<PrivateRoutes />}>
+            <Route index element={<Products />} path="/products" />
+          </Route>
+          <Route element={<Login />} path="/login" />
+        </Routes>
+      </Router>
+    </AuthProvider>
+  );
 }
 
 export default App;
