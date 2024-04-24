@@ -10,7 +10,7 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { useAuth } from "../hooks/useAuth";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const SignUp: React.FC = () => {
   const [name, setName] = useState("");
@@ -81,6 +81,13 @@ const SignUp: React.FC = () => {
               Cadastrar
             </Button>
           </form>
+          <Flex justifyContent="space-between" alignItems="center" mt={4}>
+            <Link style={{ width: "100%" }} to="/login">
+              <Button width={"full"} colorScheme="teal" size="md">
+                Login
+              </Button>
+            </Link>
+          </Flex>
         </Box>
       </Box>
     </Flex>

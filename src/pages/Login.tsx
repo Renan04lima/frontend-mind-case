@@ -10,7 +10,7 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { useAuth } from "../hooks/useAuth";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { AxiosError } from "axios";
 
 const Login: React.FC = () => {
@@ -72,6 +72,13 @@ const Login: React.FC = () => {
               Entrar
             </Button>
           </form>
+          <Flex justifyContent="space-between" alignItems="center" mt={4}>
+            <Link style={{ width: "100%" }} to="/sign-up">
+              <Button width={"full"} colorScheme="teal" size="md">
+                Cadastre-se
+              </Button>
+            </Link>
+          </Flex>
         </Box>
       </Box>
     </Flex>
