@@ -14,6 +14,7 @@ import {
   Heading,
   Image,
   Flex,
+  useToast,
 } from "@chakra-ui/react";
 import { FaEdit, FaTrash, FaPlus } from "react-icons/fa";
 import NewProductModal from "../components/NewProductModal";
@@ -34,6 +35,7 @@ const Products = () => {
     onOpen: onOpenEdit,
     onClose: onCloseEdit,
   } = useDisclosure();
+  const toast = useToast();
 
   useEffect(() => {
     ProductApi.getProducts().then((data) => {
@@ -68,9 +70,21 @@ const Products = () => {
               : undefined,
           },
         ]);
+        toast({
+          title: "Cadatrado com sucesso.",
+          status: "success",
+          duration: 5000,
+          isClosable: true,
+        });
       })
-      .then((err) => {
-        console.log(err);
+      .catch((err) => {
+        toast({
+          title: "Erro ao cadastrar.",
+          description: err.response.data.error,
+          status: "error",
+          duration: 5000,
+          isClosable: true,
+        });
       });
   };
 
@@ -107,9 +121,21 @@ const Products = () => {
               : undefined,
           },
         ]);
+        toast({
+          title: "Editado com sucesso.",
+          status: "success",
+          duration: 5000,
+          isClosable: true,
+        });
       })
-      .then((err) => {
-        console.log(err);
+      .catch((err) => {
+        toast({
+          title: "Erro ao editar.",
+          description: err.response.data.error,
+          status: "error",
+          duration: 5000,
+          isClosable: true,
+        });
       });
   };
 
@@ -117,11 +143,23 @@ const Products = () => {
     ProductApi.deleteProduct(id)
       .then(() => {
         setProducts(products.filter((product) => product.id !== id));
+        toast({
+          title: "Deletado com sucesso.",
+          status: "success",
+          duration: 5000,
+          isClosable: true,
+        });
       })
-      .then((err) => {
-        console.log(err);
+      .catch((err) => {
+        toast({
+          title: "Erro ao deletar.",
+          description: err.response.data.error,
+          status: "error",
+          duration: 5000,
+          isClosable: true,
+        });
       });
-  }
+  };
 
   return (
     <Container>

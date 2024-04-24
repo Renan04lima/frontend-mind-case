@@ -7,6 +7,7 @@ import {
   FormLabel,
   Input,
   Button,
+  useToast,
 } from "@chakra-ui/react";
 import { useAuth } from "../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
@@ -17,6 +18,7 @@ const SignUp: React.FC = () => {
   const [password, setPassword] = useState("");
   const { signUp } = useAuth();
   const navigate = useNavigate();
+  const toast = useToast();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -24,7 +26,13 @@ const SignUp: React.FC = () => {
       await signUp(name, email, password);
       navigate("/products");
     } catch (error) {
-      console.error(error);
+      toast({
+        title: "Cadastro inválido.",
+        description: error.response.data.error,
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      });
     }
   };
 

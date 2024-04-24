@@ -26,46 +26,38 @@ export const AuthProvider: React.FC = ({ children }: any) => {
   const keyStorageUser = "@user";
 
   async function signIn(email: string, password: string) {
-    try {
-      const { data } = await api.post("login", {
-        email,
-        password,
-      });
+    const { data } = await api.post("login", {
+      email,
+      password,
+    });
 
-      const userInfo = {
-        token: data.token,
-        user: data.user,
-      };
+    const userInfo = {
+      token: data.token,
+      user: data.user,
+    };
 
-      localStorage.setItem(keyStorageUser, JSON.stringify(userInfo));
-      setUser(userInfo);
+    localStorage.setItem(keyStorageUser, JSON.stringify(userInfo));
+    setUser(userInfo);
 
-      api.defaults.headers.common["Authorization"] = `Bearer ${userInfo.token}`;
-    } catch (error: any) {
-      throw new Error(error.response.data.message);
-    }
+    api.defaults.headers.common["Authorization"] = `Bearer ${userInfo.token}`;
   }
 
   async function signUp(name: string, email: string, password: string) {
-    try {
-      const { data } = await api.post("sign-up", {
-        name,
-        email,
-        password,
-      });
+    const { data } = await api.post("sign-up", {
+      name,
+      email,
+      password,
+    });
 
-      const userInfo = {
-        token: data.token,
-        user: data.user,
-      };
+    const userInfo = {
+      token: data.token,
+      user: data.user,
+    };
 
-      localStorage.setItem(keyStorageUser, JSON.stringify(userInfo));
-      setUser(userInfo);
+    localStorage.setItem(keyStorageUser, JSON.stringify(userInfo));
+    setUser(userInfo);
 
-      api.defaults.headers.common["Authorization"] = `Bearer ${userInfo.token}`;
-    } catch (error: any) {
-      throw new Error(error.response.data.message);
-    }
+    api.defaults.headers.common["Authorization"] = `Bearer ${userInfo.token}`;
   }
 
   function logOut() {

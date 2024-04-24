@@ -7,15 +7,18 @@ import {
   FormLabel,
   Input,
   Button,
+  useToast,
 } from "@chakra-ui/react";
 import { useAuth } from "../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
+import { AxiosError } from "axios";
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const { signIn } = useAuth();
   const navigate = useNavigate();
+  const toast = useToast();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -23,7 +26,13 @@ const Login: React.FC = () => {
       await signIn(email, password);
       navigate("/products");
     } catch (error) {
-      console.error(error);
+      toast({
+        title: "Login inválido.",
+        description: error.response.data.error,
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      });
     }
   };
 
