@@ -113,6 +113,16 @@ const Products = () => {
       });
   };
 
+  const handleDeleteProduct = async (id: number) => {
+    ProductApi.deleteProduct(id)
+      .then(() => {
+        setProducts(products.filter((product) => product.id !== id));
+      })
+      .then((err) => {
+        console.log(err);
+      });
+  }
+
   return (
     <Container>
       <Flex justify={"space-between"} mb={"30px"} alignItems={"center"}>
@@ -171,6 +181,7 @@ const Products = () => {
                   icon={<FaTrash />}
                   colorScheme="red"
                   aria-label="Delete"
+                  onClick={() => handleDeleteProduct(product.id)}
                 />
               </Td>
             </Tr>
