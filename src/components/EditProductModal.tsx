@@ -17,7 +17,7 @@ import {
   NewProductData,
   ProductModel,
 } from "../models/product";
-import { dataURLtoFile } from "../utils";
+// import { dataURLtoFile } from "../utils";
 
 interface EditProductModalProps {
   isOpen: boolean;
@@ -37,12 +37,13 @@ const EditProductModal: React.FC<EditProductModalProps> = ({
     description: productSelected.description,
     price: productSelected.price,
     quantityStock: productSelected.quantityStock,
-    image: productSelected?.image
-      ? dataURLtoFile(
-          `data:${productSelected.image.mimetype};base64,${productSelected.image.buffer}`,
-          "nome_do_arquivo.jpeg"
-        )
-      : undefined,
+    image: undefined,
+    // productSelected?.image
+    //   ? dataURLtoFile(
+    //       `data:${productSelected.image.mimetype};base64,${productSelected.image.buffer}`,
+    //       "nome_do_arquivo.jpeg"
+    //     )
+    //   : undefined,
   });
 
   const handleInputChange = (e: React.FormEvent<HTMLInputElement>) => {
