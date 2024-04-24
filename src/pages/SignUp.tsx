@@ -11,16 +11,17 @@ import {
 import { useAuth } from "../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 
-const Login: React.FC = () => {
+const SignUp: React.FC = () => {
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const { signIn } = useAuth();
+  const { signUp } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      await signIn(email, password);
+      await signUp(name, email, password);
       navigate("/products");
     } catch (error) {
       console.error(error);
@@ -37,11 +38,20 @@ const Login: React.FC = () => {
         boxShadow="lg"
       >
         <Box textAlign="center">
-          <Heading>Login</Heading>
+          <Heading>Cadastro de Usuário</Heading>
         </Box>
         <Box my={4} textAlign="left">
           <form onSubmit={handleSubmit}>
             <FormControl>
+              <FormLabel>Nome</FormLabel>
+              <Input
+                type="text"
+                placeholder="Digite seu nome"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+              />
+            </FormControl>
+            <FormControl mt={4}>
               <FormLabel>Email</FormLabel>
               <Input
                 type="email"
@@ -60,7 +70,7 @@ const Login: React.FC = () => {
               />
             </FormControl>
             <Button width="full" mt={4} type="submit">
-              Entrar
+              Cadastrar
             </Button>
           </form>
         </Box>
@@ -69,4 +79,4 @@ const Login: React.FC = () => {
   );
 };
 
-export default Login;
+export default SignUp;
